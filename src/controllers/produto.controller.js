@@ -17,13 +17,19 @@ produtosRoutes.post("/", async (req, res) => {
     console.error(error);
     res.status(400).send({ message: error.details[0].message });
   }
-  
+  const jaExiste = await produtosService.validateProdutoNameService(req.body.nome);
+  if(jaExiste) {
+    return res.status(400).json({message: "Produto "+req.body.nome+" já existe."});
+  }
+
   const produtoCreated = await produtosService.createProdutoService(req.body);
   console.log(produtoCreated);
   return res.status(200).json(produtoCreated);
 });
 
 produtosRoutes.put("/", async (req, res) => {
+  const token = req.headers.authorization;
+  const payload = await authenticateToken(token);
   const produtoUpdated = await produtosService.updateProdutoService(req.body);
   console.log(produtoUpdated);
   return res.status(200).json(produtoUpdated);

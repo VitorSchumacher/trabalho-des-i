@@ -5,7 +5,7 @@ const {
   deleteProdutoModel,
   getProdutoByNomeModel,
   updateProdutoModel,
-  validateProdutoModel
+  validateProdutoNameModel
 } = require("../models/produto.model");
 const { generateJWTToken } = require("../utils/jwt");
 
@@ -30,19 +30,17 @@ const getUserByNomeService = async (nome) => {
     return produto;
   };
 
-const deleteProdutoService = (id) => {
-  return deleteProdutoModel(id);
+const deleteProdutoService = async (id) => {
+  return await deleteProdutoModel(id);
 };
 
-const updateProdutoService = (produto) => {
-    return updateProdutoModel(produto);
+const updateProdutoService = async (produto) => {
+    return await updateProdutoModel(produto);
 }
 
-const validateProdutoNameService = (nome) => {
-    const produto = validateProdutoModel(nome);
-    if (produto.length > 0) {
-        throw {message: "Produto já existe"}
-    }
+const validateProdutoNameService = async (nome) => {
+    const produto = await validateProdutoNameModel(nome);
+    return (produto[0].length > 0)
 }
 module.exports = {
   getProdutosService,
